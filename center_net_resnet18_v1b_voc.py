@@ -5,6 +5,13 @@ from mxnet.gluon.data import DataLoader
 from gluoncv import data, model_zoo, utils
 from matplotlib import pyplot as plt
 import numpy as np
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+import torchvision
+
+transform = transforms.Compose([
+    transforms.ToTensor()
+])
 
 # Load the Pascal VOC dataset
 train_dataset = data.VOCDetection(splits=[(2007, 'trainval'), (2012, 'trainval')])
@@ -12,6 +19,12 @@ val_dataset = data.VOCDetection(splits=[(2007, 'test')])
 
 print('Num of training images:', len(train_dataset))
 print('Num of validation images:', len(val_dataset))
+
+image, target = train_dataset[0]
+
+plt.imshow(image.permute(1, 2, 0))  
+plt.axis('off')
+plt.show()
 
 # Load a pre-trained CenterNet model
 net = model_zoo.get_model('center_net_resnet18_v1b_voc', pretrained=True)
