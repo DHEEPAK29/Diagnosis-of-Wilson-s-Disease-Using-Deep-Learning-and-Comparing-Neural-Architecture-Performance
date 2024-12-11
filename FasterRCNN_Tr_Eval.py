@@ -3,6 +3,7 @@ import torchvision
 from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator
 from torchvision.models.detection.transform import GeneralizedRCNNTransform
+import matplotlib.pyplot as plt
 
 # Load a pre-trained ResNet50 model
 backbone = torchvision.models.resnet50(pretrained=True)
@@ -38,9 +39,8 @@ transform = GeneralizedRCNNTransform(
     image_std=[0.229, 0.224, 0.225]
 )
 
-# Load your dataset
-# Replace 'YourDataset' with your actual dataset class
-dataset = YourDataset(root='PATH/', transforms=transform)
+# Load dataset 
+dataset = YourDataset(root='PATH', transforms=transform)
 
 # Split the dataset into training and validation sets
 indices = torch.randperm(len(dataset)).tolist()
