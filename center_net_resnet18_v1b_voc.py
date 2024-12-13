@@ -13,7 +13,7 @@ transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-# Load the Pascal VOC dataset
+# Pascal VOC dataset
 train_dataset = data.VOCDetection(splits=[(2007, 'trainval'), (2012, 'trainval')])
 val_dataset = data.VOCDetection(splits=[(2007, 'test')])
 
@@ -37,7 +37,10 @@ print('Shape of pre-processed image:', x.shape)
 # Define the training loop
 def train(net, train_data, val_data, epochs, ctx):
     trainer = Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.001, 'momentum': 0.9, 'wd': 0.0005})
+    train_loss = []
+    val_loss = []
     for epoch in range(epochs):
+        epoch_loss = 0
         for i, batch in enumerate(train_data):
             data = gluon.utils.split_and_load(batch[0], ctx_list=ctx, batch_axis=0)
             label = gluon.utils.split_and_load(batch[1], ctx_list=ctx, batch_axis=0)
@@ -47,18 +50,35 @@ def train(net, train_data, val_data, epochs, ctx):
             for l in losses:
                 l.backward()
             trainer.step(batch_size)
-        print(f'Epoch {epoch} completed')
+            epoch_loss += sum([l.mean().asscalar() for l in losses]) / len(losses)
+        train_loss.append(epoch_loss / len(train_data))
+        print(f'Epoch {epoch} completed with training loss: {train_loss[-1]}')
+
+        # Validation loss
+        val_epoch_loss = 0
+        for i, batch in enumerate(val_data):
+            data = gluon.utils.split_and_load(batch[0], ctx_list=ctx, batch_axis=0)
+            label = gluon.utils.split_and_load(batch[1], ctx_list=ctx, batch_axis=0)
+            outputs = [net(X) for X in data]
+            losses = [net.loss(yhat, y) for yhat, y in zip(outputs, label)]
+            val_epoch_loss += sum([l.mean().asscalar() for l in losses]) / len(losses)
+        val_loss.append(val_epoch_loss / len(val_data))
+        print(f'Epoch {epoch} completed with validation loss: {val_loss[-1]}')
+
+    # Loss plot 
+    plt.figure(figsize=(10, 5))
+    plt.plot(train_loss, label='Training Loss')
+    plt.plot(val_loss, label='Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.title('Training and Validation Loss')
+    plt.show()
 
 # Load data
 train_data = DataLoader(train_dataset.transform(data.transforms.presets.center_net.CenterNetDefaultTrainTransform(512, 512)), batch_size=8, shuffle=True)
 val_data = DataLoader(val_dataset.transform(data.transforms.presets.center_net.CenterNetDefaultValTransform(512, 512)), batch_size=8, shuffle=False)
 
-# Train the model
+# Training the model
 ctx = [mx.gpu(0)]
 train(net, train_data, val_data, epochs=10, ctx=ctx)
-
-# Evaluate the model
-for i, batch in enumerate(val_data):
-    data = gluon.utils.split_and_load(batch[0], ctx_list=ctx, batch_axis=0)
-    label = gluon.utils.split_and_load(batch[1], ctx_list=ctx, batch_axis=0)
-    outputs = [net(X) for X in data]
