@@ -6,6 +6,9 @@ Abstract— Wilson's disease is a rare genetic disorder characterized by the acc
 ![DL+WD1](https://github.com/user-attachments/assets/527da79b-ab17-4d79-88fc-91fb1a2bc5be)
 
 
+![image](https://github.com/user-attachments/assets/df6d04af-81f4-4d6e-8d84-631ad3d99bc2)
+
+
 Figure 1: Image A (on the left) appears to have a higher contrast between the grey and white matter of the brain. It is likely a T1-weighted image, which typically shows grey matter as lighter and white matter as darker. The cerebrospinal fluid (CSF) appears dark.
 Image B (on the right) seems to be a T2-weighted image, where the CSF and other fluids appear bright, and the grey matter is darker compared to the white matter. This type of imaging is sensitive to fluid, which makes it appear bright.
 
