@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 val_dataset = data.VOCDetection(splits=[(2007, 'test')])
 
 # pre-trained CenterNet model
-net = model_zoo.get_model('center_net_resnet18_v1b_voc', pretrained=True)
+net = model_zoo.get_model('center_net_resnet18_v1b_voc', pretrained=True) #center_net_resnet18_v1b
 net.hybridize()
 
 # data
