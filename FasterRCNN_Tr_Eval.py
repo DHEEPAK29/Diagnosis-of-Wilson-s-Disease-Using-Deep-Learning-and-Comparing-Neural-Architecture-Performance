@@ -40,7 +40,7 @@ transform = GeneralizedRCNNTransform(
 )
 
 # Load dataset 
-dataset = YourDataset(root='PATH', transforms=transform)
+dataset = Dataset(root='/dir/brain+ve', transforms=transform)
 
 # Split the dataset into training and validation sets
 indices = torch.randperm(len(dataset)).tolist()
@@ -53,7 +53,7 @@ train_loader = torch.utils.data.DataLoader(
     collate_fn=lambda x: tuple(zip(*x))
 )
 val_loader = torch.utils.data.DataLoader(
-    val_dataset, batch_size=2, shuffle=False, num_workers=4,
+    val_dataset, batch_size=4, shuffle=False, num_workers=4,
     collate_fn=lambda x: tuple(zip(*x))
 )
 
@@ -61,7 +61,7 @@ val_loader = torch.utils.data.DataLoader(
 optimizer = torch.optim.SGD(model.parameters(), lr=0.005, momentum=0.9, weight_decay=0.0005)
 
 # Training loop
-num_epochs = 10
+num_epochs = 13
 for epoch in range(num_epochs):
     model.train()
     for images, targets in train_loader:
