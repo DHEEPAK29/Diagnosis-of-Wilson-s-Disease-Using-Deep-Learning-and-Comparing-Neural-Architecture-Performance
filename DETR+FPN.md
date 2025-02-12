@@ -1,6 +1,6 @@
 ![image](https://github.com/user-attachments/assets/6abb2841-e30d-42f8-bcfb-575ffd3fb6d2)
 
-'''
+``` 
 import torch
 import torchvision.transforms as T
 from transformers import DetrForObjectDetection, DetrImageProcessor
@@ -30,4 +30,4 @@ boxes = outputs.pred_boxes
 
 print("Detected objects:", logits)
 print("Bounding boxes:", boxes)
-'''
+``` 
