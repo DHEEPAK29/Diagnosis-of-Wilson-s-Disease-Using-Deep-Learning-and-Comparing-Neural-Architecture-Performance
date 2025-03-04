@@ -19,6 +19,12 @@ model.eval()
 
 # Load the model weights
 checkpointer = DetectronCheckpointer(cfg, model)
+'''
+
+LOOP
+
+'''
+
 checkpointer.load("path/to/model/weights.pth")
 
 # Define the image transformation
